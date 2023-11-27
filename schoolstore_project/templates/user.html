@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <style>
+        button {
+    width: 20%;
+    padding: 10px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Add a smooth transition effect */
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+button:focus {
+    outline: none; /* Remove the default focus outline */
+}
+
+
+        h1 {
+            font-size: 50px;
+        }
+
+        img {
+            max-width: 50%;
+            height: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<center><h1>WELCOME</h1>
+<img src="../static/img/smile.jpg">
+    <br>
+    <br>
+ <a href="{% url 'storeapp:form' %}"><button type="submit" >Click Here</button></a></center>
+
+
+</body>
+</html>

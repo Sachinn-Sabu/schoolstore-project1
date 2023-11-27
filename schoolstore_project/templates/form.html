@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fill the form</title>
+
+    <style>
+        form {
+            width: 50%;
+            margin: auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        /* Increase the size of the address field */
+        #address {
+            height: 100px; /* Adjust the height as needed */
+            width: 730px;
+        }
+
+
+        /* Button styling */
+        button {
+            font-size: 16px; /* Adjust as needed for the desired font size */
+            padding: 15px 20px; /* Adjust as needed for the desired padding */
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 10px; /* Added margin between buttons */
+        }
+
+button:hover {
+    background-color: #45a049;
+}
+
+        /* Materials Provided */
+.materials-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.material-checkbox {
+    margin-right: 15px; /* Adjust as needed for spacing between checkboxes */
+    display: flex;
+    align-items: center;
+}
+
+.material-checkbox input {
+    margin-right: 5px; /* Adjust as needed for spacing between checkbox and label */
+}
+
+     /* Logout button styling */
+        #logout {
+            font-size: 16px;
+            padding: 15px 20px;
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        #logout:hover {
+            background-color: #d32f2f;
+        }
+
+
+    </style>
+</head>
+<body>
+<h1 style="text-align: center; margin-top: 20px;">Fill The Form</h1>
+<form action="{% url 'storeapp:confirm' %}" method="GET">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="dob">DOB:</label>
+    <input type="date" id="dob" name="dob" required>
+
+    <label for="age">Age:</label>
+    <input type="text" id="age" name="age" required>
+
+    <label for="gender">Gender:</label>
+    <select id="gender" name="gender" required>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+    </select>
+
+    <label for="phone">Phone Number:</label>
+    <input type="text" id="phone" name="phone" maxlength="10" pattern="[0-9]{10}" title="Please enter 10 digits" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="address">Address:</label>
+    <textarea id="address" name="address" rows="4" required></textarea>
+
+     <label for="department">Department:</label>
+    <select id="department" name="department">
+        {% for dept in departments %}
+            <option value="{{ dept.id }}" {% if selected_department and selected_department.id == dept.id %}selected{% endif %}>
+                {{ dept.name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <label for="course">Course:</label>
+    <select id="course" name="course">
+        {% for course in initial_courses %}
+            <option value="{{ course.id }}">{{ course.name }}</option>
+        {% endfor %}
+    </select>
+
+
+
+    <label for="purpose">Purpose:</label>
+    <select id="purpose" name="purpose" required>
+        <option value="enquiry">Enquiry</option>
+        <option value="placeorder">Place Order</option>
+        <option value="return">Return</option>
+    </select>
+
+    <label>Materials Provided:</label>
+<div class="materials-checkboxes">
+    <div class="material-checkbox">
+        <input type="checkbox" id="notebook" name="materials[]" value="notebook">
+        <label for="notebook">Notebook</label>
+    </div>
+
+    <div class="material-checkbox">
+        <input type="checkbox" id="pen" name="materials[]" value="pen">
+        <label for="pen">Pen</label>
+    </div>
+
+    <div class="material-checkbox">
+        <input type="checkbox" id="examPapers" name="materials[]" value="examPapers">
+        <label for="examPapers">Exam Papers</label>
+    </div>
+</div>
+
+<br>
+    <center>
+         <button type="submit">Submit</button>
+        <a href="{% url 'credentials:logout' %}"><button id="logout" type="button">Logout</button></a>
+
+    </center>
+
+
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var departmentDropdown = document.getElementById('department');
+    var courseDropdown = document.getElementById('course');
+
+    // Function to fetch and populate courses based on the selected department
+    function populateCourses(departmentId) {
+        fetch("{% url 'storeapp:get_courses_by_department' %}?department=" + departmentId)
+            .then(response => response.json())
+            .then(data => {
+                // Clear existing options
+                courseDropdown.innerHTML = '';
+                data.courses.forEach(course => {
+                    var option = document.createElement('option');
+                    option.value = course.id;
+                    option.text = course.name;
+                    courseDropdown.add(option);
+                });
+            })
+            .catch(error => console.error('Error fetching courses:', error));
+    }
+
+    // Initially populate courses based on the selected department
+    populateCourses(departmentDropdown.value);
+
+    // Add change event listener to the department dropdown
+    departmentDropdown.addEventListener('change', function () {
+        var departmentId = this.value;
+        // Populate courses when the department changes
+        populateCourses(departmentId);
+    });
+});
+</script>
+
+
+</body>
+</html>
